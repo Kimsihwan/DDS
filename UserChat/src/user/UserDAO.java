@@ -90,7 +90,6 @@ public class UserDAO {
 	public int register(String userID, String userPassword, String userName, String userAge, String userGender, String userEmail, String userProfile) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;
 		String SQL = "INSERT INTO USER VALUES (?, ?, ?, ?, ?, ?, ?)";
 		try {
 			conn = dataSource.getConnection();
@@ -102,18 +101,12 @@ public class UserDAO {
 			pstmt.setString(5, userGender);
 			pstmt.setString(6, userEmail);
 			pstmt.setString(7, userProfile);
-			rs = pstmt.executeQuery();
-			if(rs.next() || userID.equals("")) {
-				return 0; // 이미 존재하는 회원				
-			} else {
-				return 1; // 가입 가능한 회원
-			}
+			return pstmt.executeUpdate();
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		} finally {
 			try {
-				if(rs != null) rs.close();
 				if(pstmt != null) pstmt.close();
 				if(conn != null) conn.close();
 			} catch (Exception e) {
