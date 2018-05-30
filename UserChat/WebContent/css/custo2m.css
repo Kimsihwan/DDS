@@ -1,26 +1,24 @@
-<style>
-@import url('https://fonts.googleapis.com/css?family=Nanum+Gothic');
-@import url('https://fonts.googleapis.com/css?family=Do+Hyeon');
-@import url('https://fonts.googleapis.com/css?family=Noto+Sans');
-</style>
+@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css)
+@import url(http://fonts.googleapis.com/earlyaccess/hanna.css);
+@import url(http://fonts.googleapis.com/earlyaccess/notosanskannada.css);
 *{
-	font-family: 'Nanum Gothic', sans-serif;
+	fontf-family: 'Nanum Gothic';
 }
 h5{
-	font-family: 'Noto Sans', sans-serif;
+	font-family: 'Noto Sans Kannada', sans-serif;
 	font-size: 15px;
 }
 h4{
-	font-family: 'Noto Sans', sans-serif;
+	font-family: 'Noto Sans Kannada', sans-serif;
 }
 h3{
-	font-family: 'Do Hyeon', sans-serif;
+	font-family: 'Hanna';
 }
 h2{
-	font-family: 'Do Hyeon', sans-serif;
+	font-family: 'Hanna';
 }
 h1{
-	font-family: 'Do Hyeon', sans-serif;
+	font-family: 'Hanna';
 }
 /* 테이블 관련 디자인 처리 */
 thead th {
