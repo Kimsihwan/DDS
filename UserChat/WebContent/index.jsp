@@ -58,7 +58,10 @@
 				<a href="#" class="dropdown-toggle"
 					data-toggle="dropdown" role="buton" aria-haspopup="true"
 					aria-expanded="false">회원관리<span class="caret"></span>
-				</a>			
+				</a>					
+				<ul class="dropdown-menu">
+					<li><a href="logoutAction.jsp">로그아웃</a></li>
+				</ul>			
 			</li>
 		</ul>
 		<%
