@@ -96,7 +96,7 @@
 		</div>
 	</nav>
 	<div class="container">
-		<form method="post" action="./userRegister">
+		<form method="post" action="./UserRegisterServlet">
 			<table class="table table-bordered table-hover" style="text-align: center; border: 1px solid #dddddd">
 				<thead>
 					<tr>
