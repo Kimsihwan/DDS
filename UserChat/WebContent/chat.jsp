@@ -2,23 +2,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset= UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="css/bootstrap.css">
-	<link rel="stylesheet" href="css/custom.css">
-	<title>JSP Ajax 실시간 회원제 채팅 서비스</title>
-	<script src="js/bootstrap.js"></script>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>  
-</head>
-<body>
 	<%
 		String userID= null;
 		if(session.getAttribute("userID") != null){
 		userID = (String) session.getAttribute("userID");
 		}
+		String toID = null;
+		if(request.getParameter("toID") != null){
+			toID = (String) request.getParameter("toID");
+		}
 	%>
+	<meta http-equiv="Content-Type" content="text/html; charset= UTF-8">	
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/custom.css">
+	<title>JSP Ajax 실시간 회원제 채팅 서비스</title>
+	<script src="js/bootstrap.js"></script>	
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+		function autoClosingAlert(selector, delay) {
+			var alert = $(selector).alert();
+			alert.show();
+			window.setTimeout(function() { alert.hide() }, delay);
+		}
+		function submitFunction(){
+			var fromID = '<%= userID %>';
+			var toID = '<%= toID %>';
+			var chatContent = $('#chatContent').val();
+			$.ajax({
+					type: "POST",
+					url: "./ChatSubmitServlet",
+					data: {
+						fromID: encodeURIComponent(fromID),
+						toID: encodeURIComponent(toID),
+						chatContent: encodeURIComponent(chatContent)						
+					},
+					success: function(result) {
+						if(result == 1) {
+							autoClosingAlert('#successMessage', 2000);
+						} else if(result == 0) {
+							autoClosingAlert('#dangerMessage', 2000);
+						} else {
+							autoClosingAlert('#warningMessage', 2000);							
+						}
+					}					
+			});
+			$('#chatContent').val('');
+		}
+	</script>  
+</head>
+<body>
 	<nav class="navbar navbar-default">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle collapsed"
@@ -80,11 +114,6 @@
 						<div id="chatList" class="porlet-body chat-widget" style="overflow-y: auto; width: auto; height: 600px;">
 						</div>
 						<div class="portlet-footer">
-							<div class="row">
-								<div class="form-group col-xs-4">
-									<input style="height: 40px;" type="text" id="chatName" class="form-control" placeholder="이름" maxlength="8">
-								</div>
-							</div>
 							<div class="row" style="height: 90px;">
 								<div class="form-group col-xs-10">
 									<textarea style="height: 80px;" id="chatContent" class="form-control" placeholder="메시지를 입력하세요." maxlength="100"></textarea>
@@ -105,7 +134,7 @@
 		<strong>메시지 전송에 성공했습니다.</strong>
 	</div>
 	<div class="alert alert-danger" id="dangerMessage" style="display: none;">
-		<strong>이름과 내용을 모두 입력해주세요.</strong>
+		<strong>내용을 모두 입력해주세요.</strong>
 	</div>
 	<div class="alert alert-warning" id="warningMessage" style="display: none;">
 		<strong>데이터베이스 오류가 발생했습니다.</strong>

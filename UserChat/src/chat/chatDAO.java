@@ -49,7 +49,7 @@ public class chatDAO {
 				int chatTime = Integer.parseInt(rs.getString("chatTime").substring(11, 13));
 				String timeType = "오전";
 				if(chatTime >= 12) {
-					timeType = "오전";
+					timeType = "오후";
 					chatTime -= 12;
 				}
 				chat.setChatTime(rs.getString("chatTime").substring(0, 11) + " " + timeType + " " + chatTime + ":" + rs.getString("chatTime").substring(14, 16) + "");

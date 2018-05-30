@@ -17,7 +17,7 @@
 			$.ajax({
 				type: 'POST',
 				url: './UserRegisterCheckServlet',
-				data: {userID, userID},
+				data: {userID: userID},
 				success: function(result) {
 					if(result == 1){
 						$('#checkMessage').html('사용할 수 있는 아이디입니다.');
