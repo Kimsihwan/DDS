@@ -17,7 +17,7 @@ public class ChatSubmitServlet extends HttpServlet {
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		System.out.println("¼­ºí¸´ µé¾î¿È");
+		System.out.println("ChatSubmitServlet ¼­ºí¸´ µé¾î¿È");
 		request.setCharacterEncoding("utf-8");
 		response.setContentType("text/html; charset=utf-8");
 //		String fromID = request.getParameter("fromID");
