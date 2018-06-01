@@ -99,7 +99,7 @@ public class chatDAO {
 				int chatTime = Integer.parseInt(rs.getString("chatTime").substring(11, 13));
 				String timeType = "오전";
 				if(chatTime >= 12) {
-					timeType = "오전";
+					timeType = "오후";
 					chatTime -= 12;
 				}
 				chat.setChatTime(rs.getString("chatTime").substring(0, 11) + " " + timeType + " " + chatTime + ":" + rs.getString("chatTime").substring(14, 16) + "");
@@ -120,6 +120,67 @@ public class chatDAO {
 		}
 		return chatList; // 리스트 반환
 	}
+	
+	public ArrayList<chatDTO> getBox(String userID){
+		ArrayList<chatDTO> chatList = null;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String SQL = "select * from chat where chatID in (select max(chatID) from chat where toID = ? or fromID = ? group by fromID, toID);";
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, userID);
+			pstmt.setString(2, userID);
+			rs = pstmt.executeQuery();
+			chatList = new ArrayList<chatDTO>();
+			while(rs.next()) {
+				chatDTO chat = new chatDTO();
+				chat.setChatID(rs.getInt("chatID"));
+				chat.setFromID(rs.getString("fromID").replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>"));
+				chat.setToID(rs.getString("toID").replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>"));
+				chat.setChatContent(rs.getString("chatContent").replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>"));
+				int chatTime = Integer.parseInt(rs.getString("chatTime").substring(11, 13));
+				String timeType = "오전";
+				if(chatTime >= 12) {
+					timeType = "오후";
+					chatTime -= 12;
+				}
+				chat.setChatTime(rs.getString("chatTime").substring(0, 11) + " " + timeType + " " + chatTime + ":" + rs.getString("chatTime").substring(14, 16) + "");
+				chatList.add(chat);
+			}
+			for(int i = 0; i < chatList.size(); i++) {
+				chatDTO x = chatList.get(i);
+				for(int j = 0; j < chatList.size(); j++) {
+					chatDTO y = chatList.get(j);
+					if(x.getFromID().equals(y.getToID()) && x.getToID().equals(y.getFromID())) {
+						if(x.getChatID() < y.getChatID()) {
+							chatList.remove(x);
+							i--;
+							break;							
+						} else {
+							chatList.remove(y);
+							j--;
+						}
+					}
+				}
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();				
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+		}
+		return chatList; // 리스트 반환
+	}
+	
 	public int submit(String fromID, String toID, String chatContent){
 		Connection conn = null;
 		PreparedStatement pstmt = null;

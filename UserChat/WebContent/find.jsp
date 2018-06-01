@@ -19,9 +19,10 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="css/theme12.css">
 	<link rel="stylesheet" href="css/custom.css">
-	<title>JSP Ajax 실시간 회원제 채팅 서비스</title>
-	<script src="js/bootstrap.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>  
+	<link rel="stylesheet" href="css/font.css">
+	<script src="http://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<title>JSP Ajax 실시간 회원제 채팅 서비스</title>		
+	<script src="js/bootstrap.js"></script> 
 	<script type="text/javascript">
 		function findFunction() {
 			var userID = $('#findID').val();
@@ -58,6 +59,30 @@
 		function failFreind() {
 			$('#friendResult').html('');
 		}
+		function getUnread() {
+			$.ajax({
+				type: "POST",
+				url: "./ChatUnreadServlet",
+				data: {
+					userID: encodeURIComponent('<%= userID %>'),
+				},
+				success: function(result) {
+					if(result >= 1){
+						showUnread(result);	
+					} else {
+						showUnread('');
+					}
+				}
+			});
+		}
+		function getInfiniteUnread() {
+			setInterval(function() {
+				getUnread();
+			}, 4000);
+		}
+		function showUnread(result) {
+			$('#unread').html(result);
+		}
 	</script>
 </head>
 <body>
@@ -76,6 +101,7 @@
 			<ul class="nav navbar-nav">
 				<li><a href="index.jsp">메인</a>
 				<li class="active"><a href="find.jsp">친구찾기</a></li>
+				<li><a href="box.jsp">메시지 함<span id="unread" class= "label label-info"></span></a></li>
 			</ul>
 				<ul class="nav navbar-nav navbar-right">
 			<li class="dropdown">
@@ -176,5 +202,17 @@
 			</div>
 		</div>
 	</div>
+	<%
+		if(userID != null) {
+	%>
+		<script type="text/javascript">
+			$(document).ready(function () {
+				getUnread();
+				getInfiniteUnread();
+			});
+		</script>
+	<%		
+		}
+	 %>
 </body>
 </html>
