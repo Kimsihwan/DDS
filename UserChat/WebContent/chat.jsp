@@ -1,3 +1,4 @@
+<%@page import="java.net.URLDecoder"%>
 <%@ page language="java" contentType="text/html; charset= UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -22,6 +23,12 @@
 			session.setAttribute("messageContent", "대화 상대가 지정되지 않았습니다.");
 			response.sendRedirect("index.jsp");
 			return;
+		}
+		if(userID.equals(URLDecoder.decode(toID, "UTF-8"))) {
+			session.setAttribute("messageType", "오류 메시지");
+			session.setAttribute("messageContent", "자기 자신에게는 쪽지를 보낼 수 없습니다.");
+			response.sendRedirect("index.jsp");
+			return;			
 		}
 	%>
 	<meta http-equiv="Content-Type" content="text/html; charset= UTF-8">	

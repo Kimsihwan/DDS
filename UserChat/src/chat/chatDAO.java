@@ -261,5 +261,34 @@ public class chatDAO {
 		}
 		return -1; //데이터베이스 오류
 	} 
+	
+	public int getUnreadChat(String fromID, String toID) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String SQL = "select count(chatID) from chat where fromID = ? and toID = ? and chatRead = 0";
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setString(1, fromID);
+			pstmt.setString(2, toID);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				return rs.getInt("count(chatID)");
+			}
+			return 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if(rs != null) rs.close();
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();	
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return -1; //데이터베이스 오류
+	} 
 
 }

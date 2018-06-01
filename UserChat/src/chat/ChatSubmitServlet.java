@@ -30,7 +30,10 @@ public class ChatSubmitServlet extends HttpServlet {
 		if(fromID == null || fromID.equals("") || toID == null || toID.equals("") 
 				|| chatContent == null || chatContent.equals("")) {
 			response.getWriter().write("0");			
-		} else {
+		} else if(fromID.equals(toID)) {
+			response.getWriter().write("-1");
+		}
+		else {
 			
 			response.getWriter().write(new chatDAO().submit(fromID, toID, chatContent)+"");
 		}
