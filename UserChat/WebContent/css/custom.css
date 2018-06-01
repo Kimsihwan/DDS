@@ -4,23 +4,23 @@
 @import url('https://fonts.googleapis.com/css?family=Noto+Sans');
 </style>
 *{
-	font-family: 'Nanum Gothic', sans-serif;
+	font-family: 'Nanum Gothic';
 }
 h5{
-	font-family: 'Noto Sans', sans-serif;
+	font-family: 'Noto Sans';
 	font-size: 15px;
 }
 h4{
-	font-family: 'Noto Sans', sans-serif;
+	font-family: 'Noto Sans';
 }
 h3{
-	font-family: 'Do Hyeon', sans-serif;
+	font-family: 'Do Hyeon';
 }
 h2{
-	font-family: 'Do Hyeon', sans-serif;
+	font-family: 'Do Hyeon';
 }
 h1{
-	font-family: 'Do Hyeon', sans-serif;
+	font-family: 'Do Hyeon';
 }
 /* 테이블 관련 디자인 처리 */
 thead th {
@@ -190,4 +190,88 @@ tr th:last-child {
 }
 .text-red {
     color: #e74c3c;
-}                
+}
+/* 전체 링크 관련 영역*/
+a {
+	color: #000000;
+	textdecoration: none;		
+}
+a:hover {
+	color: #bbbbbb;
+	textdecoration: none;
+	cursor: pointer;	
+}
+/*내비게이션 영역*/
+.navbar-default { /* 내비게이션 배경 색상 */
+	background-color: #006DCC;
+	border-color: #006DCC;
+	border-bottom-color: #dddddd;
+	border-bottom-width: 3px;
+	border-radius: 0px;
+}
+.navbar-default .navbar-brand { /* 내비게이션 제목 색상*/
+	color: #ffffff;
+	padding: 25px;	
+	font-family: 'Do Hyeon', sans-serif;	
+}
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus { /* 내비게이션 제목에 마우스를 올렸을 때 */
+	color: #dddddd;
+	background-color: transparent;		
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus { /* 선택된 내비게이션 마우스 색상 이벤트*/
+	color: #ffffff;
+	background-color: #1456b8;	
+}
+.navbar-default .navbar-nav > li > a{ /* 내비게이션 글자 기본 폰트 변경*/
+	color: white;
+	font-family: 'Noto Sans', sans-serif; 			
+}
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus { /* 내비게이션 글자에 마우스를 올렸을 때*/
+	color: #dddddd;	
+}
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus { /* 열린 드랍다운 마우스 색상 이벤트*/
+	color: #006DCC;
+	text-decoration: none;
+	background-color: #ffffff;	
+}
+.navbar-default .navbar-toggle:hover,
+.navbar-default .navbar-toggle:focus { /* 토글에 마우스를 올렸을 떄*/
+	background-color: #1456B8;	
+}
+.navbar-default .navbar-toggle .icon-bar{ /* 토글 아이콘 바 색상*/
+	background-color: #dddddd;	
+}
+@media (max-width: 767px) { /* 작은 화면일 때 드랍다운 아이템에 마우스를 올렸 을 때*/
+	.navber-default .navbar-nav .open .dropdown-menu > li > a {
+		color: #ffffff;	
+	}
+	.navber-default .navbar-nav .open .dropdown-menu > li > a:hover,
+	.navber-default .navbar-nav .open .dropdown-menu > li > a:focus {
+		color: #eeeeee;	
+	}
+}
+/* 내비게이션 바 길이 수정*/
+.navbar-fixed-top {
+	min-height: 70px;
+}
+.navbar-nav > li > a {
+	padding-top: 0px;
+	padding-bottom: 0px;
+	line-height: 70px;
+}
+@media (max-width: 767px) {
+	.navbar-default .navbar-brand {
+		padding-top: 15px;
+	}
+	.navbar-nav > li > a{
+		padding-top: 0px;
+		padding-bottom: 0px;
+		line-height: 40px;		
+	}
+}
