@@ -1,30 +1,68 @@
 <%@ page language="java" contentType="text/html; charset= UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-<head>
-	<meta http-equiv="Content-Type" content="text/html; charset= UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="css/custom.css">
-	<link rel="stylesheet" href="css/bootstrap.css">
-	<title>JSP Ajax 실시간 회원제 채팅 서비스</title>
-	<script src="js/bootstrap.js"></script>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
-<body>
 	<%
 		String userID= null;
 		if(session.getAttribute("userID") != null){
 		userID = (String) session.getAttribute("userID");
 		}
-		if(userID != null){
+		if (userID == null){
 			session.setAttribute("messageType", "오류 메시지");
-			session.setAttribute("messageContent", "현재 로그인이 되어 있는 상태입니다.");
+			session.setAttribute("messageContent", "현재 로그인이 되어 있지 않습니다.");
 			response.sendRedirect("index.jsp");
 			return;
+			
 		}
 	%>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset= UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/custom.css">
+	<title>JSP Ajax 실시간 회원제 채팅 서비스</title>
+	<script src="js/bootstrap.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>  
+	<script type="text/javascript">
+		function findFunction() {
+			var userID = $('#findID').val();
+			$.ajax({
+				type: "POST",
+				url: './UserRegisterCheckServlet',
+				data: {userID: userID},
+				success: function(result) {
+					if(result == 0) {
+						$('#checkMessage').html('친구찾기에 성공했습니다.');
+						$('#checkType').attr('class', 'modal-content panel-success');
+						getFreind(userID);
+					} else {
+						$('#checkMessage').html('친구를 찾을수 없습니다.');
+						$('#checkType').attr('class', 'modal-content panel-warning');
+						failFreind();						
+					}
+					$('#checkModal').modal("show");
+				}
+			})
+		}
+		function getFreind(findID) {
+			$('#friendResult').html('<thead' +
+					'<tr>' +
+					'<th><h4>검색 결과</h4></th>' +
+					'</tr>' +
+					'</thead>' +
+					'<tbody>' +
+					'<tr>' +
+					'<td style="text-align: center;"><h3>' + findID + '</h3><a href="chat.jsp?toID=' + encodeURIComponent(findID) + '" class="btn btn-primary pull-right">' + '메시지 보내기</a></td>' +
+					'</tr>' +
+					'</tbody>');
+		}
+		function failFreind() {
+			$('#friendResult').html('');
+		}
+	</script>
+</head>
+<body>
 	<nav class="navbar navbar-default">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle collapsed"
@@ -39,55 +77,44 @@
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav">
 				<li><a href="index.jsp">메인</a>
-				<li><a href="find.jsp">친구찾기</a></li>
+				<li class="active"><a href="find.jsp">친구찾기</a></li>
 			</ul>
-		<%
-			if(userID == null){
-				
-		%>
-		<ul class="nav navbar-nav navbar-right">
+				<ul class="nav navbar-nav navbar-right">
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle"
 					data-toggle="dropdown" role="buton" aria-haspopup="true"
-					aria-expanded="false">접속하기<span class="caret"></span>
-					</a>
+					aria-expanded="false">회원관리<span class="caret"></span>
+				</a>					
 				<ul class="dropdown-menu">
-					<li class="active"><a href="login.jsp">로그인</a></li>
-					<li><a href="join.jsp">회원가입</a></li>
-				</ul>				
+					<li><a href="logoutAction.jsp">로그아웃</a></li>
+				</ul>			
 			</li>
 		</ul>
-		<%
-			}
-		%>
-	</div>
+		</div>
 	</nav>
 	<div class="container">
-		<form method="post" action="./UserLoginServlet">
-			<table class="table table-bordered table-hover" style="text-align: center; border: 1px solid #dddddd">
-				<thead>	
-					<tr>
-						<th colspan="2"><h4>로그인 양식</h4>
-						</th>
-					</tr>		
-				</thead>
-				<tbody>
-					<tr>
-						<td style="width: 110px;"><h5>아이디</h5></td>
-						<td><input class="form-control" type="text" name="userID" maxlength="20" placeholder="아이디를 입력하세요."></td>
-					</tr>					
-					<tr>
-						<td style="width: 110px;"><h5>비밀번호</h5></td>
-						<td><input class="form-control" type="password" name="userPassword" maxlength="20" placeholder="비밀번호를 입력하세요."></td>
-					</tr>
-					<tr>
-						<td style="text-align: left;" colspan="2"><input class="btn btn-primary pull-right" type="submit" value="로그인"></td>
-					</tr>
-				</tbody>
-			</table>
-		</form>
+		<table class="table table-bordered table-hover" style="text-align: center; border: 1px solid #dddddd;">
+			<thead>
+				<tr>
+					<th colspan="2"><h4>검색으로 친구찾기</h4></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td style="width:110px;"><h5>친구아이디</h5></td>
+					<td><input class="form-control" type="text" id="findID" maxlength="20" placeholder="찾을 아이디를 입력하세요."></td>
+				</tr>
+				<tr>				
+					<td colspan="2"><button class="btn btn-primary pull-right" onclick="findFunction();">검색</button></td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
-	<%
+	<div class="container">
+		<table id="friendResult" class="table table-bordered table-hover" style="text-align: center; border: 1px solid #ddddd;">		
+		</table>
+	</div>
+		<%
 		String messageContent = null;
 		if (session.getAttribute("messageContent") != null) {
 			messageContent = (String) session.getAttribute("messageContent");
