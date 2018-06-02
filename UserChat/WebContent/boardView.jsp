@@ -130,7 +130,7 @@
 			%>
 				<tr>
 					<td><%= board.getBoardID() %></td>
-					<td style="text-align: left;"><a href="board.show.jsp?boardID=<%= board.getBoardID()%>"><%= board.getBoardTitle() %></a></td>
+					<td style="text-align: left;"><a href="boardShow.jsp?boardID=<%= board.getBoardID()%>"><%= board.getBoardTitle() %></a></td>
 					<td><%= board.getUserID() %></td>
 					<td><%= board.getBoardDate()%></td>
 					<td><%= board.getBoardHit()%></td>

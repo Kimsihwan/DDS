@@ -1,9 +1,6 @@
+<%@page import="board.BoardDAO"%>
+<%@page import="board.BoardDTO"%>
 <%@ page language="java" contentType="text/html; charset= UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="board.BoardDAO" %>
-<%@ page import="board.BoardDTO" %>
-<%@ page import="user.UserDTO" %>
-<%@ page import="user.UserDAO" %>
-<%@ page import="java.util.ArrayList" %>
 <!DOCTYPE html>
 <html>
 	<%
@@ -17,34 +14,15 @@
 			response.sendRedirect("index.jsp");
 			return;
 		}
-		UserDTO user = new UserDAO().getUser(userID);
+		String boardID = null;
+		if (request.getParameter("boardID") != null) {
+			boardID = (String) request.getParameter("boardID");
+		}
+		BoardDAO boardDAO = new BoardDAO();
+		BoardDTO board = boardDAO.getBoard(boardID);
+		boardDAO.hit(boardID);
 	%>
 <head>
-<style type="text/css">
-.btn-file {
-	position: relative;
-	overflow: hidden;	
-}
-.btn-file input[type=file] {
-	position: absolute;
-	top: 0;
-	right: 0;
-	min-height: 100%;
-	min-width: 100%;
-	font-size: 100px;
-	text-align: right;
-	filter: alpha(opacity=0);
-	opacity: 0;
-	outline: none;
-	background: white;
-	cursor: inherit;
-	display: block;
-}
-.file {
-	visibility: hidden;
-	position: absolute;
-}
-</style>
 	<meta http-equiv="Content-Type" content="text/html; charset= UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="css/theme12.css">
@@ -78,15 +56,6 @@
 		function showUnread(result) {
 			$('#unread').html(result);
 		}
-		function passwordCheckFunction() {
-			var userPassword1 = $('#userPassword1').val();
-			var userPassword2 = $('#userPassword2').val();
-			if(userPassword1 != userPassword2) {
-				$('#passwordCheckMessage').html('비밀번호가 서로 일치하지 않습니다.');
-			} else{
-				$('#passwordCheckMessage').html('');
-			}
-		}
 	</script> 
 </head>
 <body>
@@ -106,9 +75,28 @@
 				<li><a href="index.jsp">메인</a>
 				<li><a href="find.jsp">친구찾기</a></li>
 				<li><a href="box.jsp">메시지 함<span id="unread" class= "label label-info"></span></a></li>
-				<li><a href="boardView.jsp">자유게시판</a></li>
+				<li class="active"><a href="boardView.jsp">자유게시판</a></li>
 			</ul>
-			<ul class="nav navbar-nav navbar-right">
+		<%
+			if(userID == null){
+				
+		%>
+		<ul class="nav navbar-nav navbar-right">
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle"
+					data-toggle="dropdown" role="buton" aria-haspopup="true"
+					aria-expanded="false">접속하기<span class="caret"></span>
+					</a>
+				<ul class="dropdown-menu">
+					<li><a href="login.jsp">로그인</a></li>
+					<li><a href="join.jsp">회원가입</a></li>
+				</ul>				
+			</li>
+		</ul>
+		<%
+			} else{
+		%>
+				<ul class="nav navbar-nav navbar-right">
 			<li class="dropdown">
 				<a href="#" class="dropdown-toggle"
 					data-toggle="dropdown" role="buton" aria-haspopup="true"
@@ -116,54 +104,62 @@
 				</a>					
 				<ul class="dropdown-menu">
 					<li><a href="update.jsp">회원정보수정</a></li>
-					<li class="active"><a href="profileUpdate.jsp">프로필수정</a></li>
+					<li><a href="profileUpdate.jsp">프로필수정</a></li>
 					<li><a href="logoutAction.jsp">로그아웃</a></li>
 				</ul>			
 			</li>
 		</ul>
+		<%
+			}
+		%>
 		</div>
-	</nav>	
+	</nav>
 	<div class="container">
-		<form method="post" action="./BoardWriteServlet" enctype="multipart/form-data">
-			<table class="table table-bordered table-hover" style="text-align: center; border: 1px solid #dddddd">
-				<thead>
-					<tr>
-						<th colspan="3"><h4>게시물 작성 양식</h4></th>						
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td style="width: 110px;"><h5>아이디</h5></td>
-						<td><h5><%= user.getUserID() %></h5>
-						<input type="hidden" name="userID" value="<%= user.getUserID() %>"></td>												
-					</tr>
-					<tr>
-						<td style="width: 110px;"><h5>글 제목</h5></td>
-						<td><input class="form-control" type="text" maxlength="50" name="boardTitle" placeholder="글 제목을 입력하세요."></td>												
-					</tr>
-					<tr>
-						<td style="width: 110px;"><h5>글 내용</h5></td>
-						<td><textarea class="form-control" rows="10" name="boardContent" maxlength="2048" placeholder="글 내용을 입력하세요."></textarea></td>												
-					</tr>
-					<tr>
-						<td style="width: 110px;"><h5>파일 업로드</h5></td>
-						<td colspan="2">
-						    <input type="file" name="boardFile" class="file">
-						    <div class="input-group col-xs-12">
-						    	<span class="input-group-addon"><i class="glyphicon glyphicon-picture"></i></span>
-						    	<input type="text" class="form-control input-lg" disabled placeholder="파일을 업로드 하세요.">
-						    	<span class="input-group-btn">
-						    		<button class="browse btn bnt-primary input-lg" type="button"><i class="glyphicon glyphicon-search"></i>파일 찾기</button>
-						    	</span>
-						    </div>
-						</td>
-					</tr>
-					<tr>
-						<td style="text-align: left;" colspan="3"><h5 style="color: red;"></h5><input class="btn btn-primary pull-right" type="submit" value="등록"></td>
-					</tr>					
-				</tbody>
-			</table>
-		</form>
+		<table class="table table-bordered table-hover" style="text-align: center; border: 1px solid #dddddd">
+			<thead>
+				<tr>
+					<th colspan="4"><h4>게시판 물 보기</h4></th>
+				</tr>
+				<tr>
+					<td style="background-color: #fafafa; color: #000000; width: 80px;"><h5>제목</h5></td>
+					<td colspan="3"><h5><%= board.getBoardTitle() %></h5></td>					
+				</tr>
+				<tr>
+					<td style="background-color: #fafafa; color: #000000; width: 80px;"><h5>작성자</h5></td>
+					<td colspan="3"><h5><%= board.getUserID() %></h5></td>					
+				</tr>
+				<tr>
+					<td style="background-color: #fafafa; color: #000000; width: 80px;"><h5>작성날짜</h5></td>
+					<td><h5><%= board.getBoardDate() %></h5></td>		
+					<td style="background-color: #fafafa; color: #000000; width: 80px;"><h5>조회수</h5></td>
+					<td><h5><%= board.getBoardHit() %></h5></td>				
+				</tr>
+				<tr>
+					<td style="vertical-align: middle; min-height: 150px; background-color: #fafafa; color: #000000; width: 80px;"><h5>글 내용</h5></td>
+					<td colspan="3" style="text-align: left;"><h5><%= board.getBoardContent() %></h5></td>					
+				</tr>
+				<tr>
+					<td style="background-color: #fafafa; color: #000000; width: 80px;"><h5>첨부파일</h5></td>
+					<td colspan="3"><h5><a href="boardDownload.jsp?boardID=<%= board.getBoardID() %>"><%= board.getBoardFile() %></a></h5></td>					
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td colspan="5" style="text-align: right;">
+						<a href="boardUpdate.jsp?boardID=<%= board.getBoardID() %>" class="btn btn-primary">수정</a>
+						<a href="boardView.jsp" class="btn btn-primary">목록</a>
+						<a href="boardReply.jsp?boardID=<%= board.getBoardID() %>" class="btn btn-primary">답변</a>
+						<%
+							if(userID.equals(board.getUserID())) {
+						%>
+							<a href="boardDelete.jsp?boardID=<%= board.getBoardID() %>" class="btn btn-primary">삭제</a>
+						<%
+							}
+						%>
+					</td>
+				</tr>				
+			</tbody>		
+		</table>
 	</div>
 		<%
 		String messageContent = null;
@@ -219,14 +215,5 @@
 	<%		
 		}
 	 %>
-	 <script type="text/javascript">
-	 	$(document).on('click', '.browse', function() {
-	 		var file = $(this).parent().parent().parent().find('.file');
-	 		file.trigger('click');
-	 	});
-	 	$(document).on('change', '.file', function() {
-	 		$(this).parent().find('.form-control').val($(this).val().replace(/C:\\fakepath\\/i, ''));
-	 	});
-	 </script>
 </body>
 </html>
