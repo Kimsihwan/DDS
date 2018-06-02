@@ -238,4 +238,27 @@ public class BoardDAO {
 		}
 		return -1; // 데이터베이스 오류
 	}
+	
+	public int delete(String boardID) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String SQL = "DELETE FROM BOARD WHERE boardID = ?";
+		try {
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setInt(1, Integer.parseInt(boardID));
+			return pstmt.executeUpdate();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				if(pstmt != null) pstmt.close();
+				if(conn != null) conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return -1; // 데이터베이스 오류
+	}
 }
