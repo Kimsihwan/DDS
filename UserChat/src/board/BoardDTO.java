@@ -13,6 +13,7 @@ public class BoardDTO {
 	int boardGroup;
 	int boardSequence;
 	int boardLevel;
+	int boardAvailabel;
 	
 	public String getUserID() {
 		return userID;
@@ -80,7 +81,13 @@ public class BoardDTO {
 	public void setBoardLevel(int boardLevel) {
 		this.boardLevel = boardLevel;
 	}
-	
+	public int getBoardAvailabel() {
+		return boardAvailabel;
+	}
+	public void setBoardAvailabel(int boardAvailabel) {
+		this.boardAvailabel = boardAvailabel;
+	}
+		
 	
 	
 }

@@ -138,7 +138,20 @@
 					<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>					
 			<%
 				}
-			%><%= board.getBoardTitle() %></a></td>
+			
+			%>
+			<%
+				if(board.getBoardAvailabel() == 0) {
+			%>
+				(삭제된 게시물 입니다.)			
+			<%
+				} else {
+			%>
+				<%= board.getBoardTitle() %>
+			<%
+				}
+			%>
+			</a></td>
 					<td><%= board.getUserID() %></td>
 					<td><%= board.getBoardDate()%></td>
 					<td><%= board.getBoardHit()%></td>
