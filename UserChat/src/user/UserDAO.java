@@ -8,11 +8,10 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
-
 public class UserDAO {
-	
+
 	DataSource dataSource;
-	
+
 	public UserDAO() {
 		try {
 			InitialContext initialContext = new InitialContext();
@@ -23,7 +22,7 @@ public class UserDAO {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public int login(String userID, String userPassword) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -34,8 +33,8 @@ public class UserDAO {
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, userID);
 			rs = pstmt.executeQuery();
-			if(rs.next()) {
-				if(rs.getString("userPassword").equals(userPassword)) {
+			if (rs.next()) {
+				if (rs.getString("userPassword").equals(userPassword)) {
 					return 1; // 로그인에 성공
 				}
 				return 2; // 비밀번호가 틀림
@@ -47,16 +46,19 @@ public class UserDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(rs != null) rs.close();
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		return -1; // 데이터베이스 오류
 	}
-	
+
 	public int registerCheck(String userID) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -67,8 +69,8 @@ public class UserDAO {
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, userID);
 			rs = pstmt.executeQuery();
-			if(rs.next() || userID.equals("")) {
-				return 0; // 이미 존재하는 회원				
+			if (rs.next() || userID.equals("")) {
+				return 0; // 이미 존재하는 회원
 			} else {
 				return 1; // 가입 가능한 회원
 			}
@@ -77,17 +79,21 @@ public class UserDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(rs != null) rs.close();
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		return -1; // 데이터베이스 오류
 	}
-	
-	public int register(String userID, String userPassword, String userName, String userAge, String userGender, String userEmail, String userProfile) {
+
+	public int register(String userID, String userPassword, String userName, String userAge, String userGender,
+			String userEmail, String userProfile) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		String SQL = "INSERT INTO USER VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -107,15 +113,17 @@ public class UserDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		return -1; // 데이터베이스 오류
 	}
-	
+
 	public UserDTO getUser(String userID) {
 		UserDTO user = new UserDTO();
 		Connection conn = null;
@@ -127,7 +135,7 @@ public class UserDAO {
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, userID);
 			rs = pstmt.executeQuery();
-			if(rs.next()) {
+			if (rs.next()) {
 				user.setUserID(userID);
 				user.setUserPassword(rs.getString("userPassword"));
 				user.setUserName(rs.getString("userName"));
@@ -141,17 +149,21 @@ public class UserDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(rs != null) rs.close();
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		return user;
 	}
-	
-	public int update(String userID, String userPassword, String userName, String userAge, String userGender, String userEmail) {
+
+	public int update(String userID, String userPassword, String userName, String userAge, String userGender,
+			String userEmail) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		String SQL = "update user set userPassword = ?, userName = ?, userAge = ?, userGender = ?, userEmail = ? where userID = ?";
@@ -170,15 +182,17 @@ public class UserDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		return -1; // 데이터베이스 오류
 	}
-	
+
 	public int profile(String userID, String userProfile) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -194,15 +208,17 @@ public class UserDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		return -1; // 데이터베이스 오류
 	}
-	
+
 	public String getProfile(String userID) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -213,8 +229,8 @@ public class UserDAO {
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, userID);
 			rs = pstmt.executeQuery();
-			if(rs.next()) {
-				if(rs.getString("userProfile").equals("")) {
+			if (rs.next()) {
+				if (rs.getString("userProfile").equals("")) {
 					return "http://localhost:8080/UserChat/images/icon.png";
 				}
 				return "http://localhost:8080/UserChat/upload/" + rs.getString("userProfile");
@@ -224,9 +240,12 @@ public class UserDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(rs != null) rs.close();
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

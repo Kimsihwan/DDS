@@ -14,7 +14,14 @@ public class BoardDTO {
 	int boardSequence;
 	int boardLevel;
 	int boardAvailabel;
+	int likeCount;
 	
+	public int getLikeCount() {
+		return likeCount;
+	}
+	public void setLikeCount(int likeCount) {
+		this.likeCount = likeCount;
+	}
 	public String getUserID() {
 		return userID;
 	}

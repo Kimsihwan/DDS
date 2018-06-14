@@ -10,12 +10,14 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/UserRegisterCheckServlet")
 public class UserRegisterCheckServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
- 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html;charset=UTF-8");
 		String userID = request.getParameter("userID");
-		if(userID == null || userID.equals("")) response.getWriter().write("-1");
+		if (userID == null || userID.equals(""))
+			response.getWriter().write("-1");
 		System.out.println("UserRegisterCheckServlet ¼­ºí¸´ µé¾î¿È");
 		response.getWriter().write(new UserDAO().registerCheck(userID) + "");
 	}

@@ -10,7 +10,7 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 public class BoardDAO {
-	
+
 	DataSource dataSource;
 
 	public BoardDAO() {
@@ -27,7 +27,7 @@ public class BoardDAO {
 	public int write(String userID, String boardTitle, String boardContent, String boardFile, String boardRealFile) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
-		String SQL = "INSERT INTO BOARD SELECT ?, IFNULL ((SELECT MAX(boardID) + 1 FROM BOARD), 1), ?, ?, now(), 0, ?, ?, IFNULL((SELECT MAX(boardGroup) + 1 FROM BOARD), 0), 0, 0, 1";
+		String SQL = "INSERT INTO BOARD SELECT ?, IFNULL ((SELECT MAX(boardID) + 1 FROM BOARD), 1), ?, ?, now(), 0, ?, ?, IFNULL((SELECT MAX(boardGroup) + 1 FROM BOARD), 0), 0, 0, 1, 0";
 		try {
 			conn = dataSource.getConnection();
 			pstmt = conn.prepareStatement(SQL);
@@ -42,8 +42,10 @@ public class BoardDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -62,11 +64,13 @@ public class BoardDAO {
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, boardID);
 			rs = pstmt.executeQuery();
-			if(rs.next()) {
+			if (rs.next()) {
 				board.setUserID(rs.getString("userID"));
 				board.setBoardID(rs.getInt("boardID"));
-				board.setBoardTitle(rs.getString("boardTitle").replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>"));
-				board.setBoardContent(rs.getString("boardContent").replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>"));
+				board.setBoardTitle(rs.getString("boardTitle").replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;")
+						.replaceAll(">", "&gt;").replaceAll("\n", "<br>"));
+				board.setBoardContent(rs.getString("boardContent").replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;")
+						.replaceAll(">", "&gt;").replaceAll("\n", "<br>"));
 				board.setBoardDate(rs.getString("boardDate").substring(0, 11));
 				board.setBoardHit(rs.getInt("boardHit"));
 				board.setBoardFile(rs.getString("boardFile"));
@@ -75,22 +79,26 @@ public class BoardDAO {
 				board.setBoardSequence(rs.getInt("boardSequence"));
 				board.setBoardLevel(rs.getInt("boardLevel"));
 				board.setBoardAvailabel(rs.getInt("boardAvailable"));
+				board.setLikeCount(rs.getInt("likeCount"));
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		} finally {
 			try {
-				if(rs != null) rs.close();
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		return board;
 	}
-		
+
 	public ArrayList<BoardDTO> getList(String pageNumber) {
 		ArrayList<BoardDTO> boardList = null;
 		Connection conn = null;
@@ -104,12 +112,14 @@ public class BoardDAO {
 			pstmt.setInt(2, (Integer.parseInt(pageNumber) - 1) * 10);
 			rs = pstmt.executeQuery();
 			boardList = new ArrayList<BoardDTO>();
-			while(rs.next()) {
+			while (rs.next()) {
 				BoardDTO board = new BoardDTO();
 				board.setUserID(rs.getString("userID"));
 				board.setBoardID(rs.getInt("boardID"));
-				board.setBoardTitle(rs.getString("boardTitle").replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>"));
-				board.setBoardContent(rs.getString("boardContent").replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br>"));
+				board.setBoardTitle(rs.getString("boardTitle").replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;")
+						.replaceAll(">", "&gt;").replaceAll("\n", "<br>"));
+				board.setBoardContent(rs.getString("boardContent").replaceAll(" ", "&nbsp;").replaceAll("<", "&lt;")
+						.replaceAll(">", "&gt;").replaceAll("\n", "<br>"));
 				board.setBoardDate(rs.getString("boardDate").substring(0, 11));
 				board.setBoardHit(rs.getInt("boardHit"));
 				board.setBoardFile(rs.getString("boardFile"));
@@ -125,16 +135,19 @@ public class BoardDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(rs != null) rs.close();
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		return boardList;
 	}
-	
+
 	public int hit(String boardID) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -149,15 +162,17 @@ public class BoardDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		return -1; // 데이터베이스 오류
 	}
-	
+
 	public String getFile(String boardID) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -168,7 +183,7 @@ public class BoardDAO {
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setString(1, boardID);
 			rs = pstmt.executeQuery();
-			if(rs.next()) {
+			if (rs.next()) {
 				return rs.getString("boardFile");
 			}
 			return "";
@@ -177,16 +192,19 @@ public class BoardDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(rs != null) rs.close();
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		return "";		
+		return "";
 	}
-	
+
 	public boolean nextPage(String pageNumber) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -197,7 +215,7 @@ public class BoardDAO {
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setInt(1, Integer.parseInt(pageNumber) * 10);
 			rs = pstmt.executeQuery();
-			if(rs.next()) {
+			if (rs.next()) {
 				return true;
 			}
 		} catch (Exception e) {
@@ -205,16 +223,19 @@ public class BoardDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(rs != null) rs.close();
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		return false;		
+		return false;
 	}
-	
+
 	public int targetPage(String pageNumber) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -225,7 +246,7 @@ public class BoardDAO {
 			pstmt = conn.prepareStatement(SQL);
 			pstmt.setInt(1, (Integer.parseInt(pageNumber) - 1) * 10);
 			rs = pstmt.executeQuery();
-			if(rs.next()) {
+			if (rs.next()) {
 				return rs.getInt(1) / 10;
 			}
 		} catch (Exception e) {
@@ -233,16 +254,19 @@ public class BoardDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(rs != null) rs.close();
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		return 0;		
+		return 0;
 	}
-	
+
 	public String getRealFile(String boardID) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -262,16 +286,19 @@ public class BoardDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(rs != null) rs.close();
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
+				if (rs != null)
+					rs.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		return "";		
+		return "";
 	}
-	
+
 	public int update(String boardID, String boardTitle, String boardContent, String boardFile, String boardRealFile) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -290,15 +317,17 @@ public class BoardDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		return -1; // 데이터베이스 오류
 	}
-	
+
 	public int delete(String boardID) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -313,16 +342,19 @@ public class BoardDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		return -1; // 데이터베이스 오류
 	}
-	
-	public int reply(String userID, String boardTitle, String boardContent, String boardFile, String boardRealFile, BoardDTO parent) {
+
+	public int reply(String userID, String boardTitle, String boardContent, String boardFile, String boardRealFile,
+			BoardDTO parent) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		String SQL = "INSERT INTO BOARD SELECT ?, IFNULL ((SELECT MAX(boardID) + 1 FROM BOARD), 1), ?, ?, now(), 0, ?, ?, ?, ?, ?, 1";
@@ -343,15 +375,17 @@ public class BoardDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		return -1; // 데이터베이스 오류
 	}
-	
+
 	public int replyUpdate(BoardDTO parent) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -367,12 +401,95 @@ public class BoardDAO {
 			e.printStackTrace();
 		} finally {
 			try {
-				if(pstmt != null) pstmt.close();
-				if(conn != null) conn.close();
+				if (pstmt != null)
+					pstmt.close();
+				if (conn != null)
+					conn.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		return -1; // 데이터베이스 오류
 	}
+	
+	public int like(String boardID) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String SQL = "UPDATE board SET likeCount = likeCount + 1 WHERE boardID = ?";
+		try {			
+			conn = dataSource.getConnection();
+			pstmt = conn.prepareStatement(SQL);
+			pstmt.setInt(1, Integer.parseInt(boardID));
+
+			return pstmt.executeUpdate();
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		} finally {
+
+			try {
+
+				if(pstmt != null) pstmt.close();
+
+				if(conn != null) conn.close();
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+
+			}
+
+		}
+
+		return -1;
+
+	}	
+
+	public String getUserID(String boardID) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+
+		try {
+
+			String SQL = "SELECT userID FROM board WHERE boardID = ?";
+
+			pstmt = conn.prepareStatement(SQL);
+
+			pstmt.setInt(1, Integer.parseInt(boardID));
+
+			rs = pstmt.executeQuery();
+
+			while(rs.next()) {
+
+				return rs.getString(1);
+
+			}
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		} finally {
+
+			try {
+
+				if(pstmt != null) pstmt.close();
+
+				if(conn != null) conn.close();
+
+			} catch (Exception e) {
+
+				e.printStackTrace();
+
+			}
+
+		}
+
+		return null;
+
+	}
+	
 }
