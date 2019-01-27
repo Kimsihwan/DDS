@@ -3,6 +3,9 @@
 
 Program Stacks
 <ul>
+  <li>JAVA</li>
+  <li>JavaScript</li>
+  <li>Bootstrap</li>
   <li>JSP</li>
-  <li>MySQL</li>
+  <li>MySQL</li>  
 </ul>
